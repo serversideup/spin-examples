@@ -28,10 +28,12 @@ services:
     networks: 
       - ci
 
-  mailhog:
-    image: mailhog/mailhog
-    networks:
-      - ci
+  mailpit:
+      image: axllent/mailpit
+      networks:
+        - ci
+      depends_on:
+        - traefik
 
 networks:
   ci:
