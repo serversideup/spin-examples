@@ -29,11 +29,11 @@ services:
       - ci
 
   mailpit:
-      image: axllent/mailpit
-      networks:
-        - ci
-      depends_on:
-        - traefik
+    image: axllent/mailpit
+    networks:
+      - ci
+    depends_on:
+      - traefik
 
 networks:
   ci:
