@@ -8,6 +8,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     volumes:
       # Add Docker as a mounted volume, so that Traefik can read the labels of other services
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -20,18 +21,27 @@ services:
       - .:/var/www/html/
     environment:
       SSL_MODE: mixed
+
     networks:
       - development
     depends_on:
       - traefik
       - mariadb
     labels:
+      # Accept traffic for HTTP
       - "traefik.enable=true"
-      - "traefik.http.routers.laravel.rule=HostRegexp(`laravel.dev.test`)"
-      - "traefik.http.routers.laravel.entrypoints=websecure"
-      - "traefik.http.routers.laravel.tls=true"
-      - "traefik.http.services.laravel.loadbalancer.server.port=443"
-      - "traefik.http.services.laravel.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.laravel-http.rule=HostRegexp(`laravel.dev.test`)"
+      - "traefik.http.routers.laravel-http.entrypoints=web"
+      - "traefik.http.routers.laravel-http.service=laravel-http"
+      - "traefik.http.services.laravel-http.loadbalancer.server.port=80"
+      - "traefik.http.services.laravel-http.loadbalancer.server.scheme=http"
+      # Accept traffic for HTTPS
+      - "traefik.http.routers.laravel-https.rule=HostRegexp(`laravel.dev.test`)"
+      - "traefik.http.routers.laravel-https.entrypoints=websecure"
+      - "traefik.http.routers.laravel-https.service=laravel-https"
+      - "traefik.http.routers.laravel-https.tls=true"
+      - "traefik.http.services.laravel-https.loadbalancer.server.port=443"
+      - "traefik.http.services.laravel-https.loadbalancer.server.scheme=https"
   
   node:
     image: node:18
@@ -47,10 +57,10 @@ services:
     volumes:
       - ./.infrastructure/volume_data/mariadb/database_data/:/var/lib/mysql
     environment:
-        MYSQL_ROOT_PASSWORD: "rootpassword"
-        MYSQL_DATABASE: "laravel"
-        MYSQL_USER: "mysqluser"
-        MYSQL_PASSWORD: "mysqlpassword"
+        MARIADB_ROOT_PASSWORD: "rootpassword"
+        MARIADB_DATABASE: "laravel"
+        MARIADB_USER: "mysqluser"
+        MARIADB_PASSWORD: "mysqlpassword"
     ports:
       - "3306:3306"
 
@@ -61,7 +71,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.mailpit.rule=Host(`mailpit.dev.test`)"
-        - "traefik.http.routers.mailpit.entrypoints=websecure"
+        - "traefik.http.routers.mailpit.entrypoints=web,websecure"
         - "traefik.http.routers.mailpit.tls=true"
         - "traefik.http.services.mailpit.loadbalancer.server.port=8025"
         - "traefik.http.services.mailpit.loadbalancer.server.scheme=http"

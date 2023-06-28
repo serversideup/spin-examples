@@ -82,18 +82,20 @@ services:
         delay: 5s
         order: start-first
       labels:
+        # Accept traffic for HTTP
         - "traefik.enable=true"
-        - "traefik.http.routers.my-laravel-app.rule=${TRAEFIK_HOST_RULE}"
-        - "traefik.http.routers.my-laravel-app.entrypoints=websecure"
-        - "traefik.http.routers.my-laravel-app.tls=true"
-        - "traefik.http.routers.my-laravel-app.tls.certresolver=letsencryptresolver"
-        - "traefik.http.services.my-laravel-app.loadbalancer.server.port=443"
-        - "traefik.http.services.my-laravel-app.loadbalancer.server.scheme=https"
-        # Health check
-        - "traefik.http.services.my-laravel-app.loadbalancer.healthcheck.path=/ping"
-        - "traefik.http.services.my-laravel-app.loadbalancer.healthcheck.interval=100ms"
-        - "traefik.http.services.my-laravel-app.loadbalancer.healthcheck.timeout=75ms"
-        - "traefik.http.services.my-laravel-app.loadbalancer.healthcheck.scheme=https"
+        - "traefik.http.routers.my-laravel-app-http.rule=HostRegexp(`laravel.dev.test`)"
+        - "traefik.http.routers.my-laravel-app-http.entrypoints=web"
+        - "traefik.http.routers.my-laravel-app-http.service=my-laravel-app-http"
+        - "traefik.http.services.my-laravel-app-http.loadbalancer.server.port=80"
+        - "traefik.http.services.my-laravel-app-http.loadbalancer.server.scheme=http"
+        # Accept traffic for HTTPS
+        - "traefik.http.routers.my-laravel-app-https.rule=HostRegexp(`laravel.dev.test`)"
+        - "traefik.http.routers.my-laravel-app-https.entrypoints=websecure"
+        - "traefik.http.routers.my-laravel-app-https.service=my-laravel-app-https"
+        - "traefik.http.routers.my-laravel-app-https.tls=true"
+        - "traefik.http.services.my-laravel-app-https.loadbalancer.server.port=443"
+        - "traefik.http.services.my-laravel-app-https.loadbalancer.server.scheme=https"
 
 configs:
   traefik:

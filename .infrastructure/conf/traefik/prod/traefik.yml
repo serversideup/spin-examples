@@ -36,11 +36,11 @@ providers:
 entryPoints:
   web:
     address: ":80"
-    http:
-      redirections:
-        entrypoint:
-          to: websecure
-          scheme: https
+    # http: ### Uncomment if you want to redirect HTTP to HTTPS
+    #   redirections:
+    #     entrypoint:
+    #       to: websecure
+    #       scheme: https
     forwardedHeaders:
       trustedIPs: *trustedIPs
     proxyProtocol:
@@ -61,10 +61,11 @@ api:
   dashboard: true
   insecure: true
 
-certificatesResolvers:
-  letsencryptresolver:
-    acme:
-      email: "changeme@example.com"
-      storage: "/certificates/acme.json"
-      httpChallenge:
-        entryPoint: web
+## Uncomment if you want to use Let's Encrypt (be sure to set your email)
+# certificatesResolvers:
+#   letsencryptresolver:
+#     acme:
+#       email: "changeme@example.com"
+#       storage: "/certificates/acme.json"
+#       httpChallenge:
+#         entryPoint: web

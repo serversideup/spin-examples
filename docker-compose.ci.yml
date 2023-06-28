@@ -4,10 +4,10 @@ services:
     networks:
       - ci
     environment:
-        MYSQL_ROOT_PASSWORD: "rootpassword"
-        MYSQL_DATABASE: "laravel_testing"
-        MYSQL_USER: "mysqluser"
-        MYSQL_PASSWORD: "mysqlpassword"
+        MARIADB_ROOT_PASSWORD: "rootpassword"
+        MARIADB_DATABASE: "laravel_testing"
+        MARIADB_USER: "mysqluser"
+        MARIADB_PASSWORD: "mysqlpassword"
 
   php:
     networks:
