@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mariadb:
     networks:
-      - web-ci
+      - ci
     environment:
         MYSQL_ROOT_PASSWORD: "rootpassword"
         MYSQL_DATABASE: "laravel_testing"
@@ -11,7 +11,7 @@ services:
 
   php:
     networks:
-      - web-ci
+      - ci
     volumes:
       - .:/var/www/html/
     working_dir: /var/www/html/
@@ -26,12 +26,12 @@ services:
       - .:/usr/src/app/
     working_dir: /usr/src/app/
     networks: 
-      - web-ci
+      - ci
 
   mailhog:
     image: mailhog/mailhog
     networks:
-      - web-ci
+      - ci
 
 networks:
-  web-ci:
+  ci:
