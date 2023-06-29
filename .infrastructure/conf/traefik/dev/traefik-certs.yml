@@ -1,0 +1,12 @@
+### Uncommment and confiugre if you want to use HTTPS locally
+# tls:
+#   stores:
+#     default:
+#       defaultCertificate:
+#         certFile: /certificates/local-dev.pem
+#         keyFile: /certificates/local-dev-key.pem
+#   certificates:
+#     - certFile: /certificates/local-dev.pem
+#       keyFile: /certificates/local-dev-key.pem
+#       stores:
+#         - default
